@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LiteClicker.App/LiteClicker.App.csproj" />
+    <Project Path="src/LiteClicker.Core/LiteClicker.Core.csproj" />
+    <Project Path="src/LiteClicker.Windows/LiteClicker.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LiteClicker.Tests/LiteClicker.Tests.csproj" />
+    <Project Path="tests/LiteClicker.TestTarget/LiteClicker.TestTarget.csproj" />
+  </Folder>
+</Solution>

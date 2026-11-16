@@ -1,0 +1,30 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  LiteClicker.Core -> /workspace/work/LiteClicker/src/LiteClicker.Core/bin/Release/net10.0/LiteClicker.Core.dll
+  LiteClicker.Windows -> /workspace/work/LiteClicker/src/LiteClicker.Windows/bin/Release/net10.0/LiteClicker.Windows.dll
+  LiteClicker.TestTarget -> /workspace/work/LiteClicker/tests/LiteClicker.TestTarget/bin/Release/net10.0-windows/win-x64/LiteClicker.TestTarget.dll
+  LiteClicker.Tests -> /workspace/work/LiteClicker/tests/LiteClicker.Tests/bin/Release/net10.0/LiteClicker.Tests.dll
+  LiteClicker.App -> /workspace/work/LiteClicker/src/LiteClicker.App/bin/Release/net10.0-windows/win-x64/LiteClicker.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:07.59
+Test run for /workspace/work/LiteClicker/tests/LiteClicker.Tests/bin/Release/net10.0/LiteClicker.Tests.dll (.NETCoreApp,Version=v10.0)
+A total of 1 test files matched the specified pattern.
+WARNING: Overwriting results file: /workspace/work/LiteClicker/artifacts/test-results/core-tests.trx
+Results File: /workspace/work/LiteClicker/artifacts/test-results/core-tests.trx
+
+Passed!  - Failed:     0, Passed:    42, Skipped:     0, Total:    42, Duration: 2 s - LiteClicker.Tests.dll (net10.0)
+VSTEST_ARTIFACTS_DIRECTORY environment variable was not found, falling back to a user-private temporary directory. This is most likely caused by an outdated Microsoft.NET.Test.Sdk package reference in the test project.
+  LiteClicker.Core -> /workspace/work/LiteClicker/src/LiteClicker.Core/bin/Release/net10.0/LiteClicker.Core.dll
+  LiteClicker.Windows -> /workspace/work/LiteClicker/src/LiteClicker.Windows/bin/Release/net10.0/LiteClicker.Windows.dll
+  LiteClicker.App -> /workspace/work/LiteClicker/src/LiteClicker.App/bin/Release/net10.0-windows/win-x64/LiteClicker.dll
+  LiteClicker.App -> /workspace/work/LiteClicker/artifacts/publish/win-x64/
+  LiteClicker.Core -> /workspace/work/LiteClicker/src/LiteClicker.Core/bin/Release/net10.0/LiteClicker.Core.dll
+  LiteClicker.Windows -> /workspace/work/LiteClicker/src/LiteClicker.Windows/bin/Release/net10.0/LiteClicker.Windows.dll
+  LiteClicker.TestTarget -> /workspace/work/LiteClicker/tests/LiteClicker.TestTarget/bin/Release/net10.0-windows/win-x64/LiteClicker.TestTarget.dll
+  LiteClicker.TestTarget -> /workspace/work/LiteClicker/artifacts/test-target/
+构建、逻辑测试和单文件发布完成：/workspace/work/LiteClicker/dist/LiteClicker-win-x64.exe
+状态：待 Windows 验证。编译和逻辑测试不等于真实输入或干净机验收通过。

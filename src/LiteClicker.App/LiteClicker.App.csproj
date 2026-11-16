@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF><UseWindowsForms>true</UseWindowsForms><ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>LiteClicker</AssemblyName><Product>轻点连点器 LiteClicker</Product>
+    <Description>当前鼠标位置的连续点击与持续按住工具</Description><Company>LiteClicker</Company>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>true</SelfContained><RuntimeFrameworkVersion>10.0.15</RuntimeFrameworkVersion>
+    <PublishSingleFile>true</PublishSingleFile><IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <PublishTrimmed>false</PublishTrimmed><PublishAot>false</PublishAot>
+    <!-- WPF owns DPI awareness; the WinForms analyzer assumes a WinForms entry point. -->
+    <NoWarn>$(NoWarn);WFO0003</NoWarn>
+    <ApplicationIcon>Assets/LiteClicker.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup><Resource Include="Assets/LiteClicker.ico" /><EmbeddedResource Include="Assets/LiteClicker.ico" LogicalName="LiteClicker.TrayIcon" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="../LiteClicker.Core/LiteClicker.Core.csproj" /><ProjectReference Include="../LiteClicker.Windows/LiteClicker.Windows.csproj" /></ItemGroup>
+</Project>
