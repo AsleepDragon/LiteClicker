@@ -1,0 +1,101 @@
+name: Build Windows preview
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: liteclicker-preview-release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_NOLOGO: 1
+      RELEASE_TAG: v1.0.0-preview.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+      - name: Build, test and publish
+        shell: pwsh
+        run: ./scripts/build.ps1
+      - name: Package release assets and record CI evidence
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force artifacts/release, artifacts/validation-tools | Out-Null
+          Copy-Item dist/LiteClicker-win-x64.exe artifacts/release/
+          Copy-Item README.md, THIRD-PARTY-NOTICES.md artifacts/release/
+          git archive --format=zip --prefix=LiteClicker/ HEAD -o artifacts/release/LiteClicker-source-1.0.0.zip
+          if ($LASTEXITCODE -ne 0) { throw 'Source archive failed.' }
+          Copy-Item artifacts/test-target/LiteClicker.TestTarget.exe artifacts/validation-tools/
+          Copy-Item docs/windows-validation.md, THIRD-PARTY-NOTICES.md artifacts/validation-tools/
+          Copy-Item licenses artifacts/validation-tools/ -Recurse
+          New-Item -ItemType Directory -Force artifacts/validation-tools/scripts | Out-Null
+          Copy-Item scripts/measure-process.ps1, scripts/analyze-target.ps1 artifacts/validation-tools/scripts/
+          Compress-Archive -Path artifacts/validation-tools/* -DestinationPath artifacts/release/LiteClicker-Windows-validation-tools.zip
+          Copy-Item artifacts/test-results/core-tests.trx artifacts/release/windows-core-tests.trx
+          Copy-Item docs/test-report.md artifacts/release/cross-build-test-report.md
+          $exe = Get-Item artifacts/release/LiteClicker-win-x64.exe
+          $hash = (Get-FileHash $exe.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          $os = Get-CimInstance Win32_OperatingSystem
+          $cpu = Get-CimInstance Win32_Processor | Select-Object -ExpandProperty Name
+          $computer = Get-CimInstance Win32_ComputerSystem
+          [xml]$trx = Get-Content artifacts/test-results/core-tests.trx -Raw
+          $counters = $trx.TestRun.ResultSummary.Counters
+          $runUrl = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+          $report = @"
+          # LiteClicker Windows CI 构建报告
+
+          **总体状态：待 Windows 11 实机验证。**
+
+          已在 GitHub Actions Windows 托管环境完成锁定依赖还原、Release 编译、逻辑测试和自包含单 EXE 发布。
+          这不是干净 Windows 11 桌面的交互验收；没有执行真实 SendInput、GUI、托盘、DPI、多屏、离线独立运行或性能验收。
+
+          - 构建运行：$runUrl
+          - 源码提交：$env:GITHUB_SHA
+          - 系统：$($os.Caption)；版本 $($os.Version)；构建 $($os.BuildNumber)
+          - CPU：$($cpu -join '; ')；逻辑处理器 $([Environment]::ProcessorCount)
+          - 总内存：$([Math]::Round($computer.TotalPhysicalMemory / 1GB, 2)) GiB
+          - .NET SDK：$(dotnet --version)
+          - 逻辑测试：$($counters.passed) 通过、$($counters.failed) 失败、$($counters.notExecuted) 未执行
+          - EXE：$($exe.Length) 字节（$([Math]::Round($exe.Length / 1MB, 2)) MiB），未签名
+          - SHA-256：$hash
+
+          完整 CI 日志见上面的构建运行；原始测试结果见 windows-core-tests.trx。
+          cross-build-test-report.md 保留此前 Linux 交叉构建记录及 AT01–AT27 状态；其中旧 EXE 校验值只对应原交叉构建文件。
+          本次下载的 Windows CI 构建文件以本报告及 SHA256SUMS.txt 为准。未完成的 Windows 11 验收仍按 docs/windows-validation.md 执行。
+          "@
+          [IO.File]::WriteAllText((Join-Path $PWD 'artifacts/release/test-report.md'), $report, [Text.UTF8Encoding]::new($false))
+          $lines = Get-ChildItem artifacts/release -File | Sort-Object Name | ForEach-Object {
+            "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name
+          }
+          [IO.File]::WriteAllLines((Join-Path $PWD 'artifacts/release/SHA256SUMS.txt'), $lines, [Text.UTF8Encoding]::new($false))
+      - name: Upload build evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiteClicker-preview
+          path: artifacts/release/*
+          retention-days: 30
+      - name: Upload files to the draft prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --json isDraft,tagName
+          if ($LASTEXITCODE -ne 0) { throw 'Expected draft prerelease not found.' }
+          $state = gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --json isDraft | ConvertFrom-Json
+          if (-not $state.isDraft) { throw 'This workflow only uploads to an unpublished draft.' }
+          $files = Get-ChildItem artifacts/release -File | Select-Object -ExpandProperty FullName
+          gh release upload $env:RELEASE_TAG @files --repo $env:GITHUB_REPOSITORY --clobber
+          if ($LASTEXITCODE -ne 0) { throw 'Release asset upload failed.' }
+          gh release edit $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --target $env:GITHUB_SHA --prerelease --draft
+          if ($LASTEXITCODE -ne 0) { throw 'Release target update failed.' }
