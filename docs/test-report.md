@@ -1,5 +1,7 @@
 # 测试报告 — LiteClicker 1.0.0
 
+> 后续已完成 Windows Server 2025 CI 构建及 42 项逻辑测试，见 [Windows CI 报告](windows-ci-test-report.md)。以下保留最初 Linux 交叉构建记录；其中旧 EXE 校验值不对应当前预发布下载文件。Windows 11 实机验收仍待完成。
+
 **总体状态：待 Windows 验证。未达到正式发行验收完成定义。**
 
 源码、WPF/Windows 项目交叉构建、xUnit 核心测试、实际一键发布脚本与 EXE 静态包结构检查已完成。当前只有 Linux 云环境，不能执行 Windows 桌面。未执行项不计为通过。

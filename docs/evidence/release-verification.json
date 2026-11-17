@@ -1,0 +1,26 @@
+{
+  "releaseAssets": 9,
+  "assetDigestsVerified": 9,
+  "sourceFilesVerified": 53,
+  "textFilesWithWindowsLineEndings": 49,
+  "commit": "2cf7e6eef29a66e0dacdb615b6dd069e754f835c",
+  "windowsTests": {
+    "total": "42",
+    "executed": "42",
+    "passed": "42",
+    "failed": "0",
+    "error": "0",
+    "timeout": "0",
+    "aborted": "0",
+    "inconclusive": "0",
+    "passedButRunAborted": "0",
+    "notRunnable": "0",
+    "notExecuted": "0",
+    "disconnected": "0",
+    "warning": "0",
+    "completed": "0",
+    "inProgress": "0",
+    "pending": "0"
+  },
+  "exeSha256": "sha256:c6e4b69ebcdec28ccbc9f20782841e2e1ab0288728f8dd3cb4d4da041a755307"
+}

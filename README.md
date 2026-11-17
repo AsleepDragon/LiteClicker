@@ -2,7 +2,9 @@
 
 Windows 11 x64 的中文鼠标工具：在当前鼠标位置连续点击，或持续按住左键。当前版本 **1.0.0，待 Windows 验证**。
 
-已完成源码、Release 单文件交叉构建和核心逻辑测试。当前实施环境为 Linux，**没有执行 WPF/Win32 真实输入、干净 Windows 11 离线运行和性能验收**。本次 EXE 是供 Windows 验收的构建，不能视为已通过全部发布标准。详情见 `docs/test-report.md`。
+已完成源码、Linux 交叉构建，以及 GitHub Actions Windows Server 2025 上的 Release 单文件构建；两个环境的 42 项核心逻辑测试均通过。**尚未执行 WPF/Win32 真实输入、干净 Windows 11 离线运行和性能验收**，本次为供验收的预发布。Windows CI 记录见 `docs/windows-ci-test-report.md`；最初的交叉构建记录与验收清单保留在 `docs/test-report.md`。
+
+**下载：[v1.0.0-preview.1 预发布](https://github.com/AsleepDragon/LiteClicker/releases/tag/v1.0.0-preview.1)**。附件包括单 EXE、源码压缩包、Windows 验收工具、测试报告和 SHA-256。发布的 EXE 来自 Windows CI，校验值以该发行页的 `SHA256SUMS.txt` 为准。
 
 ## 运行
 
